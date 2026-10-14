@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ünal Otomasyon | PLC, Pano ve Endüstriyel Otomasyon</title>
+<meta name="description" content="Ünal Otomasyon: PLC programlama, kontrol panosu imalatı, SCADA, sürücü ve sensör çözümleri, bakım ve devreye alma.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0F3; --white:#fff; --ink:#12263F; --steel:#586A7E;
+  --line:#C6CED8; --signal:#E8590C; --signal-d:#C44A07;
+  --head:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--head);line-height:1.05;letter-spacing:.2px}
+h1{font-size:clamp(46px,7vw,84px);font-weight:700}
+h2{font-size:clamp(32px,4.5vw,48px);font-weight:700}
+h3{font-size:24px;font-weight:600}
+p{max-width:62ch}
+
+/* Header */
+header{position:sticky;top:0;z-index:10;background:rgba(237,240,243,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--head);font-weight:700;font-size:26px}
+.logo svg{width:30px;height:30px}
+nav ul{display:flex;gap:28px;list-style:none;align-items:center}
+nav a{text-decoration:none;font-weight:500;font-size:16px}
+nav a:hover{color:var(--signal-d)}
+.btn{display:inline-block;background:var(--signal);color:#fff;font-weight:600;border:0;padding:13px 24px;border-radius:4px;text-decoration:none;cursor:pointer;font:600 16px var(--body);transition:background .15s}
+.btn:hover{background:var(--signal-d)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff}
+.menu-btn{display:none;background:none;border:0;font-size:28px;cursor:pointer;color:var(--ink)}
+
+/* Hero */
+.hero{padding:72px 0 80px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.hero p.lead{font-size:20px;margin:22px 0 32px;color:var(--steel)}
+.hero .actions{display:flex;gap:14px;flex-wrap:wrap}
+.rung{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:20px 20px 22px}
+.rung svg{width:100%;height:auto;display:block}
+.rung .w{stroke:#9AA7B6;stroke-width:3;fill:none;transition:stroke .2s}
+.rung .w.on{stroke:var(--signal)}
+.rung .c{stroke:var(--ink);stroke-width:3;fill:none}
+.rung text{font:500 12px var(--body);fill:var(--steel)}
+.rung .coil{fill:var(--white);stroke:var(--ink);stroke-width:3;transition:fill .2s}
+.rung .coil.on{fill:var(--signal)}
+.rung-ctl{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.rung-ctl .btn{padding:10px 20px}
+.btn.stop{background:var(--ink)}
+.btn.stop:hover{background:#0b1a2d}
+.status{display:flex;align-items:center;gap:10px;margin-left:auto;font-weight:600}
+.rotor{width:30px;height:30px;color:var(--steel)}
+.rotor.on{color:var(--signal);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rung small{display:block;color:var(--steel);margin-top:10px;font-size:14px;line-height:1.5}
+
+/* Hizmetler */
+section{padding:84px 0}
+.services{background:var(--white);border-block:1px solid var(--line)}
+.services .wrap{display:grid;grid-template-columns:.8fr 1.6fr;gap:56px}
+.services .intro{position:sticky;top:96px;align-self:start}
+.services .intro p{margin-top:16px;color:var(--steel)}
+.svc{border-top:2px solid var(--ink);padding:24px 0 30px;display:grid;grid-template-columns:1fr 1.5fr;gap:24px}
+.svc:last-child{border-bottom:1px solid var(--line)}
+.svc p{color:var(--steel)}
+.svc ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.svc li{font-size:14px;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:2px 10px}
+
+/* Süreç */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;counter-reset:s}
+.step{padding:0 24px 0 0;position:relative;counter-increment:s}
+.step::before{content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;font:700 20px var(--head)}
+.step::after{content:"";position:absolute;left:48px;right:8px;top:19px;height:2px;background:var(--ink)}
+.step:last-child::after{display:none}
+.step h3{margin:18px 0 6px}
+.step p{color:var(--steel);font-size:16px}
+
+/* Uyumluluk */
+.compat{padding:0 0 84px}
+.compat .box{border:1px solid var(--line);background:var(--white);border-radius:8px;padding:32px;display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+.compat p{color:var(--steel)}
+.compat dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px}
+.compat dt{font-weight:600}
+.compat dd{color:var(--steel)}
+
+/* İletişim */
+.contact{background:var(--ink);color:#fff}
+.contact .wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.contact p{color:#B9C5D3;margin-top:14px}
+.info{margin-top:28px;display:grid;gap:6px;font-size:18px}
+.info b{font-weight:600;color:#fff}
+form{display:grid;gap:14px}
+label{font-weight:500;font-size:15px;display:grid;gap:6px}
+input,textarea,select{font:inherit;padding:12px 14px;border-radius:4px;border:1px solid #3A5170;background:#0E1F35;color:#fff}
+input::placeholder,textarea::placeholder{color:#7B8DA3}
+textarea{min-height:110px;resize:vertical}
+.form-msg{min-height:24px;font-weight:600;color:#7EE0A2}
+
+footer{background:#0b1a2d;color:#8FA1B6;padding:26px 0;font-size:15px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .hero .wrap,.services .wrap,.contact .wrap,.compat .box{grid-template-columns:1fr}
+  .services .intro{position:static}
+  .svc{grid-template-columns:1fr;gap:8px}
+  .steps{grid-template-columns:1fr 1fr;row-gap:36px}
+  .step:nth-child(2)::after{display:none}
+  .menu-btn{display:block}
+  nav ul{display:none;position:absolute;top:64px;left:0;right:0;background:var(--paper);flex-direction:column;align-items:flex-start;padding:18px 24px 24px;border-bottom:1px solid var(--line);gap:16px}
+  nav ul.open{display:flex}
+}
+@media (max-width:520px){.steps{grid-template-columns:1fr}.step::after{display:none}.status{margin-left:0}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rotor.on{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="Ünal Otomasyon ana sayfa">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#12263F"/><path d="M6 16h6M20 16h6M12 9v14M20 9v14" stroke="#E8590C" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+      Ünal Otomasyon
+    </a>
+    <nav aria-label="Ana menü">
+      <button class="menu-btn" aria-label="Menüyü aç" aria-expanded="false" id="menuBtn">☰</button>
+      <ul id="menu">
+        <li><a href="#hizmetler">Hizmetler</a></li>
+        <li><a href="#surec">Çalışma düzeni</a></li>
+        <li><a href="#uyumluluk">Marka ve protokoller</a></li>
+        <li><a class="btn" href="#iletisim">Teklif al</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Hattınız durmasın, üretiminiz aksamasın.</h1>
+        <p class="lead">Ünal Otomasyon; PLC programlama, kontrol panosu imalatı, SCADA ve devreye alma işlerini tek ekiple yürütür. Arıza olduğunda da, yeni hat kurulduğunda da yanınızdayız.</p>
+        <div class="actions">
+          <a class="btn" href="#iletisim">Ücretsiz keşif iste</a>
+          <a class="btn ghost" href="#hizmetler">Hizmetlere bak</a>
+        </div>
+      </div>
+
+      <div class="rung" aria-label="Etkileşimli merdiven diyagramı">
+        <svg viewBox="0 0 520 220" role="img" aria-label="START, STOP ve motor bobininden oluşan bir PLC merdiven diyagramı">
+          <path class="w on" d="M24 20V200M496 20V200" id="rails"/>
+          <path class="w on" d="M24 70H110"/>
+          <path class="w on" d="M64 70V150H110"/>
+          <path class="w" id="g2" d="M126 70H240M126 150H156V70"/>
+          <path class="w" id="g3" d="M276 70H382M418 70H496"/>
+          <path class="c" d="M110 54V86M126 54V86"/>
+          <path class="c" d="M110 134V166M126 134V166"/>
+          <path class="c" d="M240 54V86M256 54V86M232 90L264 50"/>
+          <path class="w" d="M256 70H276" id="g2b"/>
+          <circle class="coil" id="coil" cx="400" cy="70" r="18"/>
+          <text x="400" y="75" text-anchor="middle" style="font-weight:600;fill:#12263F">M</text>
+          <text x="118" y="42" text-anchor="middle">START</text>
+          <text x="118" y="188" text-anchor="middle">K1 mühürleme</text>
+          <text x="248" y="42" text-anchor="middle">STOP</text>
+          <text x="400" y="42" text-anchor="middle">Motor</text>
+        </svg>
+        <div class="rung-ctl">
+          <button class="btn" id="start">START</button>
+          <button class="btn stop" id="stop">STOP</button>
+          <div class="status" aria-live="polite">
+            <svg class="rotor" id="rotor" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 4v24M4 16h24" stroke="currentColor" stroke-width="3"/></svg>
+            <span id="stateTxt">Motor durdu</span>
+          </div>
+        </div>
+        <small>START'a basın: K1 kontağı hattı mühürler, motor siz elinizi çektikten sonra da çalışmaya devam eder. STOP mühürü bozar. Panolarımızda bu mantık her gün çalışır.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="services" id="hizmetler">
+    <div class="wrap">
+      <div class="intro">
+        <h2>Fabrika zeminindeki işlerin hepsi</h2>
+        <p>Projeyi çizimle başlatır, sahada devreye alır, sonrasında bakımını üstleniriz. Her işin sorumlusu tek bir ekiptir.</p>
+      </div>
+      <div>
+        <div class="svc">
+          <h3>PLC ve HMI programlama</h3>
+          <div><p>Yeni hat için sıfırdan yazılım, eski sistemler için revizyon ve yedekleme. Operatörün anlayacağı HMI ekranları tasarlarız.</p>
+          <ul><li>Siemens</li><li>Mitsubishi</li><li>Delta</li><li>Schneider</li></ul></div>
+        </div>
+        <div class="svc">
+          <h3>Kontrol panosu imalatı</h3>
+          <div><p>Şemadan çıkan, etiketli ve test edilmiş panolar. Klemens düzeni, kablo kanalı ve topraklama standartlara uygun yapılır.</p>
+          <ul><li>Motor kontrol</li><li>Dağıtım panosu</li><li>Özel pano</li></ul></div>
+        </div>
+        <div class="svc">
+          <h3>SCADA ve izleme</h3>
+          <div><p>Üretim verisini anlık görün: duruş nedenleri, sayaç, enerji ve alarm geçmişi tek ekranda.</p>
+          <ul><li>Raporlama</li><li>Alarm</li><li>Uzaktan erişim</li></ul></div>
+        </div>
+        <div class="svc">
+          <h3>Sürücü, sensör ve robotik</h3>
+          <div><p>Hız kontrolü, servo uygulamaları, görüntü işleme ve basit pick-and-place çözümleri.</p>
+          <ul><li>Frekans invertörü</li><li>Servo</li><li>Sensör</li></ul></div>
+        </div>
+        <div class="svc">
+          <h3>Bakım ve arıza müdahalesi</h3>
+          <div><p>Periyodik kontrol, yedek parça yönetimi ve acil arıza desteği. Duruş süresini kısaltmak önceliğimizdir.</p>
+          <ul><li>Periyodik bakım</li><li>Acil destek</li><li>Yedek parça</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="surec">
+    <div class="wrap">
+      <h2>İşiniz dört adımda tamamlanır</h2>
+      <div class="steps">
+        <div class="step"><h3>Keşif</h3><p>Hattı yerinde inceler, ihtiyacı ve riskleri yazıya döker.</p></div>
+        <div class="step"><h3>Tasarım</h3><p>Elektrik şeması, yazılım akışı ve malzeme listesini onayınıza sunarız.</p></div>
+        <div class="step"><h3>İmalat ve kurulum</h3><p>Pano atölyede test edilir, sahada kurulur ve bağlanır.</p></div>
+        <div class="step"><h3>Devreye alma</h3><p>Operatör eğitimi, dokümantasyon ve garanti sonrası destek.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="compat" id="uyumluluk">
+    <div class="wrap">
+      <div class="box">
+        <div>
+          <h2>Elinizdeki sisteme uyarız</h2>
+          <p style="margin-top:12px">Marka değiştirmenize gerek yok. Mevcut ekipmanla çalışır, gerekirse eski ve yeni sistemi haberleştiririz.</p>
+        </div>
+        <dl>
+          <dt>PLC markaları</dt><dd>Siemens, Mitsubishi, Delta, Schneider, Omron</dd>
+          <dt>Haberleşme</dt><dd>Modbus RTU/TCP, Profibus, Profinet, Ethernet/IP</dd>
+          <dt>Sürücüler</dt><dd>ABB, Danfoss, Siemens, Delta</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="iletisim">
+    <div class="wrap">
+      <div>
+        <h2>Projenizi anlatın, size dönelim</h2>
+        <p>Hat, makine ya da arıza fark etmez. Kısaca yazın, aynı gün içinde sizi arayalım.</p>
+        <div class="info">
+          <span><b>Telefon:</b> 0 (555) 096 51 02</span>
+          <span><b>E-posta:</b> efeunal51.01@gmail.com</span>
+          <span><b>Adres:</b> Yeşilevler mah. ......sokak, Adana</span>
+        </div>
+      </div>
+      <form id="form" novalidate>
+        <label>Ad soyad<input name="ad" required autocomplete="name" placeholder="Adınız"></label>
+        <label>Telefon<input name="tel" type="tel" required autocomplete="tel" placeholder="05xx xxx xx xx"></label>
+        <label>Konu
+          <select name="konu">
+            <option>PLC / yazılım</option><option>Pano imalatı</option><option>SCADA / izleme</option><option>Bakım / arıza</option><option>Diğer</option>
+          </select>
+        </label>
+        <label>Mesajınız<textarea name="msg" placeholder="Makine, hat veya sorun hakkında kısaca yazın"></textarea></label>
+        <button class="btn" type="submit">Mesajı gönder</button>
+        <div class="form-msg" id="formMsg" role="status"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yil"></span> Ünal Otomasyon. Tüm hakları saklıdır.</span>
+    <span>Endüstriyel otomasyon çözümleri</span>
+  </div>
+</footer>
+
+<script>
+// Mobil menü
+const menu=document.getElementById('menu'), mb=document.getElementById('menuBtn');
+mb.addEventListener('click',()=>{const o=menu.classList.toggle('open');mb.setAttribute('aria-expanded',o)});
+menu.addEventListener('click',e=>{if(e.target.tagName==='A'){menu.classList.remove('open');mb.setAttribute('aria-expanded',false)}});
+
+// Merdiven diyagramı: START mühürler, STOP bozar
+let motor=false;
+const $=id=>document.getElementById(id);
+function render(){
+  ['g2','g2b','g3'].forEach(i=>$(i).classList.toggle('on',motor));
+  $('coil').classList.toggle('on',motor);
+  $('rotor').classList.toggle('on',motor);
+  $('stateTxt').textContent=motor?'Motor çalışıyor':'Motor durdu';
+}
+$('start').addEventListener('click',()=>{motor=true;render()});
+$('stop').addEventListener('click',()=>{motor=false;render()});
+
+// Form (örnek): gerçek gönderim için kendi sunucunuza veya form servisine bağlayın
+$('form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const f=e.target, m=$('formMsg');
+  if(!f.ad.value.trim()||!f.tel.value.trim()){m.style.color='#FFB38A';m.textContent='Ad soyad ve telefon alanlarını doldurun.';return}
+  m.style.color='#7EE0A2';m.textContent='Teşekkürler '+f.ad.value.trim()+', mesajınız alındı. Size dönüş yapacağız.';
+  f.reset();
+});
+$('yil').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
